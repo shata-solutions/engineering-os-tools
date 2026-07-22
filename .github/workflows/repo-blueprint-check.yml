@@ -12,10 +12,23 @@ name: Repository Blueprint Check (reusable)
 # (or any other exact tag) for a fully stable version, or a commit SHA for maximum
 # supply-chain immutability.
 #
-# The scripts are checked out at the SAME ref this reusable workflow was called with
-# (via github.workflow_ref), not always "main" — so a caller pinned to a SHA or an
-# exact tag gets exactly that version's script behavior, not whatever the default
-# branch currently contains.
+# PINNING MECHANISM (read this before bumping the version below): GitHub Actions does
+# NOT expose a reliable way for a reusable workflow to introspect which ref *it itself*
+# was called at from within its own job steps — `github.workflow_ref` reports the
+# TOP-LEVEL calling workflow's own ref (e.g. the caller's own branch), not this
+# workflow's. An earlier version of this file tried to parse that value and used it to
+# check out the scripts — which silently checked out whatever branch the CALLER
+# happened to be on instead of the pinned tag/SHA, defeating the entire point of
+# pinning. Do not reintroduce that pattern.
+#
+# The correct, reliable mechanism: GitHub already fetches THIS YAML FILE at exactly
+# the ref the caller pinned to (that's the built-in guarantee `uses: ...@<ref>` gives
+# for the workflow definition itself). So this file hardcodes its OWN release tag
+# below, and lets that self-reference carry the pin through to the script checkout.
+# At every release, this line is updated to the new tag as part of cutting the
+# release, BEFORE the commit is tagged — see RELEASING.md.
+env:
+  ENGINEERING_OS_TOOLS_REF: v1.0.1 # <- update this to the new tag when cutting a release
 
 on:
   workflow_call: {}
@@ -29,20 +42,11 @@ jobs:
       - name: Checkout calling repository
         uses: actions/checkout@v4
 
-      - name: Resolve the ref this workflow was called at
-        id: pin
-        env:
-          WORKFLOW_REF: ${{ github.workflow_ref }}
-        run: |
-          # github.workflow_ref looks like: owner/repo/.github/workflows/file.yml@<ref>
-          ref="${WORKFLOW_REF##*@}"
-          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout engineering-os-tools (scripts source of truth) at the pinned ref
+      - name: Checkout engineering-os-tools (scripts source of truth) at this release's own tag
         uses: actions/checkout@v4
         with:
           repository: shatasolutions/engineering-os-tools
-          ref: ${{ steps.pin.outputs.ref }}
+          ref: ${{ env.ENGINEERING_OS_TOOLS_REF }}
           path: .engineering-os-tools
 
       - name: Setup Node.js
