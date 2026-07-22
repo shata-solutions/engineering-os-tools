@@ -1,0 +1,50 @@
+name: Engineering Score (reusable)
+
+# Called from another repo's workflow like:
+#
+#   jobs:
+#     score:
+#       uses: shatasolutions/engineering-os-tools/.github/workflows/engineering-score.yml@v1
+#
+# No secrets required — see repo-blueprint-check.yml's header comment for the full
+# explanation (same design, same pinned-ref checkout mechanism).
+#
+# This workflow reports a score; it does not fail the build. It's informational, run
+# on push/PR or on demand, not as a merge gate — pair it with a real human review for
+# anything it can't see (architecture quality, code quality, performance, scalability,
+# visual consistency, engineering maturity).
+
+on:
+  workflow_call: {}
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout calling repository
+        uses: actions/checkout@v4
+
+      - name: Resolve the ref this workflow was called at
+        id: pin
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          ref="${WORKFLOW_REF##*@}"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout engineering-os-tools (scripts source of truth) at the pinned ref
+        uses: actions/checkout@v4
+        with:
+          repository: shatasolutions/engineering-os-tools
+          ref: ${{ steps.pin.outputs.ref }}
+          path: .engineering-os-tools
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run engineering score
+        run: node .engineering-os-tools/scripts/engineering-score.mjs .

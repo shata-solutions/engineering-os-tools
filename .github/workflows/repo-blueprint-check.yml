@@ -1,0 +1,54 @@
+name: Repository Blueprint Check (reusable)
+
+# Called from another repo's workflow like:
+#
+#   jobs:
+#     blueprint:
+#       uses: shatasolutions/engineering-os-tools/.github/workflows/repo-blueprint-check.yml@v1
+#
+# No secrets required. This repo is public, so the calling repo's default
+# GITHUB_TOKEN is sufficient to check it out — there is nothing to configure beyond
+# the `uses:` line above. Pin `@v1` for a maintained moving major version, `@v1.0.0`
+# (or any other exact tag) for a fully stable version, or a commit SHA for maximum
+# supply-chain immutability.
+#
+# The scripts are checked out at the SAME ref this reusable workflow was called with
+# (via github.workflow_ref), not always "main" — so a caller pinned to a SHA or an
+# exact tag gets exactly that version's script behavior, not whatever the default
+# branch currently contains.
+
+on:
+  workflow_call: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout calling repository
+        uses: actions/checkout@v4
+
+      - name: Resolve the ref this workflow was called at
+        id: pin
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          # github.workflow_ref looks like: owner/repo/.github/workflows/file.yml@<ref>
+          ref="${WORKFLOW_REF##*@}"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout engineering-os-tools (scripts source of truth) at the pinned ref
+        uses: actions/checkout@v4
+        with:
+          repository: shatasolutions/engineering-os-tools
+          ref: ${{ steps.pin.outputs.ref }}
+          path: .engineering-os-tools
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run blueprint check
+        run: node .engineering-os-tools/scripts/check-repo-blueprint.mjs .

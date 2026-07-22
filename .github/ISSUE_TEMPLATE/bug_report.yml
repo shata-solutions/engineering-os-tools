@@ -1,0 +1,26 @@
+name: Bug Report
+description: Something is broken or behaving incorrectly
+title: "fix: <short description>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands, or a minimal repository layout that reproduces it.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / ref
+      description: Which tag or commit SHA you called this workflow/script with.
+    validations:
+      required: true
