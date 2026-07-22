@@ -6,7 +6,24 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
-## [1.0.2] - 2026-07-22
+## [1.0.3] - 2026-07-22
+
+### Fixed
+
+- **`v1.0.2` shipped with `ENGINEERING_OS_TOOLS_REF` still pointing at `v1.0.1`** —
+  the workflow YAML files' own self-referencing pin (see `RELEASING.md` and both
+  workflow files' header comments for why this exists) was not updated as part of
+  cutting the `v1.0.2` release, so any caller using `v1.0.2` or `v1` after it moved
+  actually still ran `v1.0.1`'s (buggy) `engineering-score.mjs`. Confirmed by a real
+  remote run's own logs after moving `v1` to `v1.0.2`: `ref: v1.0.1`, not `v1.0.2`.
+  `v1.0.2` remains published, unmodified, with this flaw — exact tags are never
+  rewritten — and is documented as broken in this entry rather than quietly
+  superseded. **Use `v1.0.3` or later, or `v1`.** No callers were materially affected:
+  the only behavior difference `v1.0.2` was meant to introduce (the `.env.example`
+  fix) doesn't change output for any of this account's three real callers, all of
+  which already have their own `.env.example`.
+
+## [1.0.2] - 2026-07-22 — **BROKEN, see 1.0.3**
 
 ### Fixed
 
