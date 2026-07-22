@@ -6,6 +6,21 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-22
+
+### Fixed
+
+- `engineering-score.mjs`'s Repository Hygiene category checked `.env.example`
+  presence unconditionally, unlike `check-repo-blueprint.mjs`'s equivalent rule,
+  which correctly skips the requirement for a repo with no env vars at all (no
+  `package.json`, no `.env`/`.env.local`). Found during a cross-repo scoring audit:
+  penalized zero-dependency repos (this repo itself, and `shatasolutions/.github`)
+  4 points for a file they have no reason to have. Fixed by adding the same
+  `usesEnvVars()` exemption the blueprint checker already used. No change for any
+  repo that already has `.env.example` or that genuinely reads env vars without one
+  — confirmed by re-running against 5 real repositories: 2 gained 4 points each
+  (the two zero-dependency repos), 3 were unaffected.
+
 ## [1.0.1] - 2026-07-22
 
 ### Fixed

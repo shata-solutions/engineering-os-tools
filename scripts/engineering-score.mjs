@@ -56,6 +56,14 @@ function dirHasFiles(rel) {
     return false;
   }
 }
+// Mirrors check-repo-blueprint.mjs's usesEnvVars() exactly — a repo with no
+// package.json and no .env/.env.local has no env vars to document, so .env.example
+// shouldn't be scored as missing. Previously this category checked has(".env.example")
+// unconditionally, penalizing zero-dependency repos (e.g. this one) that have no env
+// vars at all — an inconsistency with the blueprint checker's already-correct logic.
+function usesEnvVars() {
+  return has("package.json") || has(".env") || has(".env.local");
+}
 
 // Each category: { label, max, run() -> { points, max, notes: string[] } }
 const categories = [
@@ -80,7 +88,7 @@ const categories = [
       if (has(".gitignore")) points += 3; else notes.push(".gitignore missing");
       if (has("CHANGELOG.md")) points += 4; else notes.push("CHANGELOG.md missing");
       if (has("LICENSE") || has("LICENSE.md")) points += 4; else notes.push("LICENSE missing");
-      if (has(".env.example")) points += 4; else notes.push(".env.example missing (if repo uses env vars)");
+      if (has(".env.example") || !usesEnvVars()) points += 4; else notes.push(".env.example missing (repo reads env vars but has no example file)");
       return { points, notes };
     },
   },

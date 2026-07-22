@@ -87,6 +87,28 @@ test("lowercase pull_request_template.md counts toward Open Source / Contributio
   assert.match(stdout, /Open Source \/ Contribution Readiness\s+10 \/ 10/);
 });
 
+test("a repo with no package.json and no .env files is not penalized for missing .env.example", () => {
+  // Regression for a real bug found during a cross-repo audit: this category checked
+  // .env.example presence unconditionally, unlike check-repo-blueprint.mjs's equivalent
+  // rule, which correctly exempts repos with nothing to document. A zero-dependency
+  // repo (no package.json, no .env/.env.local) has no env vars at all.
+  const dir = makeFixture();
+  writeFileSync(join(dir, "README.md"), "x");
+
+  const stdout = run(dir);
+  const idx = stdout.indexOf("Repository Hygiene");
+  const section = stdout.slice(idx, stdout.indexOf("Security", idx));
+  assert.doesNotMatch(section, /\.env\.example missing/, `expected no .env.example deduction, got:\n${section}`);
+});
+
+test("a repo that DOES use env vars (has package.json) is still correctly penalized for missing .env.example", () => {
+  const dir = makeFixture();
+  writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "x" }));
+
+  const stdout = run(dir);
+  assert.match(stdout, /\.env\.example missing \(repo reads env vars but has no example file\)/);
+});
+
 test("total score is still out of 100 and arithmetic is internally consistent", () => {
   const dir = makeFixture();
   writeFileSync(join(dir, "README.md"), "A real readme with enough words to not look like a stub. ".repeat(5));
