@@ -22,10 +22,10 @@ on:
 
 jobs:
   blueprint:
-    uses: shatasolutions/engineering-os-tools/.github/workflows/repo-blueprint-check.yml@v1
+    uses: shata-solutions/engineering-os-tools/.github/workflows/repo-blueprint-check.yml@v1
 
   score:
-    uses: shatasolutions/engineering-os-tools/.github/workflows/engineering-score.yml@v1
+    uses: shata-solutions/engineering-os-tools/.github/workflows/engineering-score.yml@v1
 ```
 
 No secrets, no setup beyond the `uses:` lines above — this repository is public, so the
@@ -40,7 +40,7 @@ each of these means and how they're maintained.
 ## Quick start — as a local CLI
 
 ```bash
-git clone https://github.com/shatasolutions/engineering-os-tools.git
+git clone https://github.com/shata-solutions/engineering-os-tools.git
 node engineering-os-tools/scripts/check-repo-blueprint.mjs /path/to/your/repo
 node engineering-os-tools/scripts/engineering-score.mjs /path/to/your/repo
 ```

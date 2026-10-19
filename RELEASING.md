@@ -65,7 +65,7 @@ Anyone consuming this tool can verify what a given tag actually contains without
 trusting this document:
 
 ```bash
-git clone https://github.com/shatasolutions/engineering-os-tools.git
+git clone https://github.com/shata-solutions/engineering-os-tools.git
 cd engineering-os-tools
 git log v1.0.0 -1        # confirm the tag's commit and message
 git diff v1.0.0 v1        # confirm v1 currently points at v1.0.0 (or wherever it's been moved to)

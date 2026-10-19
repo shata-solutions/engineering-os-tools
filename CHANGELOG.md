@@ -6,6 +6,15 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-10-19
+
+### Changed
+
+- Canonical home moved to `shata-solutions/engineering-os-tools`. Reusable workflow
+  references and the self-referencing checkout now use the organization path.
+  `v1.0.0`-`v1.0.3` are unchanged; the original `shatasolutions/engineering-os-tools`
+  stays available as a frozen compatibility source.
+
 ## [1.0.3] - 2026-07-22
 
 ### Fixed

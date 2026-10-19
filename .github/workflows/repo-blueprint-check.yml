@@ -4,7 +4,7 @@ name: Repository Blueprint Check (reusable)
 #
 #   jobs:
 #     blueprint:
-#       uses: shatasolutions/engineering-os-tools/.github/workflows/repo-blueprint-check.yml@v1
+#       uses: shata-solutions/engineering-os-tools/.github/workflows/repo-blueprint-check.yml@v1
 #
 # No secrets required. This repo is public, so the calling repo's default
 # GITHUB_TOKEN is sufficient to check it out — there is nothing to configure beyond
@@ -28,7 +28,7 @@ name: Repository Blueprint Check (reusable)
 # At every release, this line is updated to the new tag as part of cutting the
 # release, BEFORE the commit is tagged — see RELEASING.md.
 env:
-  ENGINEERING_OS_TOOLS_REF: v1.0.3 # <- update this to the new tag when cutting a release
+  ENGINEERING_OS_TOOLS_REF: v1.0.4 # <- update this to the new tag when cutting a release
 
 on:
   workflow_call: {}
@@ -45,7 +45,7 @@ jobs:
       - name: Checkout engineering-os-tools (scripts source of truth) at this release's own tag
         uses: actions/checkout@v4
         with:
-          repository: shatasolutions/engineering-os-tools
+          repository: shata-solutions/engineering-os-tools
           ref: ${{ env.ENGINEERING_OS_TOOLS_REF }}
           path: .engineering-os-tools
 

@@ -4,7 +4,7 @@ name: Engineering Score (reusable)
 #
 #   jobs:
 #     score:
-#       uses: shatasolutions/engineering-os-tools/.github/workflows/engineering-score.yml@v1
+#       uses: shata-solutions/engineering-os-tools/.github/workflows/engineering-score.yml@v1
 #
 # No secrets required — see repo-blueprint-check.yml's header comment for the full
 # explanation, including the PINNING MECHANISM note (why this hardcodes its own tag
@@ -16,7 +16,7 @@ name: Engineering Score (reusable)
 # anything it can't see (architecture quality, code quality, performance, scalability,
 # visual consistency, engineering maturity).
 env:
-  ENGINEERING_OS_TOOLS_REF: v1.0.3 # <- update this to the new tag when cutting a release
+  ENGINEERING_OS_TOOLS_REF: v1.0.4 # <- update this to the new tag when cutting a release
 
 on:
   workflow_call: {}
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout engineering-os-tools (scripts source of truth) at this release's own tag
         uses: actions/checkout@v4
         with:
-          repository: shatasolutions/engineering-os-tools
+          repository: shata-solutions/engineering-os-tools
           ref: ${{ env.ENGINEERING_OS_TOOLS_REF }}
           path: .engineering-os-tools
 
