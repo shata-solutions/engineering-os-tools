@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/readme-cover.jpg" width="100%" alt="engineering-os-tools — repository blueprint checker and engineering score, by Shata Solutions">
+</p>
+
 # engineering-os-tools
 
 Two small, zero-dependency Node.js scripts and their matching GitHub Actions reusable
@@ -100,6 +104,12 @@ exact point breakdown — it's short and meant to be read.
 See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md),
 [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), and
 [`AI_ASSISTED_ENGINEERING.md`](AI_ASSISTED_ENGINEERING.md).
+
+## About
+
+Built and used by [Shata Solutions](https://www.shatasolutions.com) to keep its own
+repositories on one baseline. Issues and pull requests are welcome; see
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
