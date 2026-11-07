@@ -53,6 +53,47 @@ Exit code of `check-repo-blueprint.mjs`: `0` = compliant at the required tier, `
 not compliant, `2` = bad path. `engineering-score.mjs` is informational only and always
 exits `0`.
 
+### What a run looks like
+
+Running both scripts on this repository (`node scripts/check-repo-blueprint.mjs .`),
+abridged:
+
+```text
+Repository Blueprint Check — .
+
+[PASS] readme                       README.md at repo root
+[PASS] license-or-proprietary-note  LICENSE file (or explicit proprietary notice in README)
+[PASS] changelog                    CHANGELOG.md at repo root
+[PASS] security                     SECURITY.md at repo root (no fallback unless your account's default community-health repo is public)
+[PASS] ai-policy                    AI_ASSISTED_ENGINEERING.md at repo root
+[PASS] env-not-tracked              .env is git-ignored (never committed)
+...
+18 checks — 0 required failure(s), 0 recommended warning(s).
+
+Result: COMPLIANT with the repository blueprint (required tier).
+```
+
+```text
+Engineering Score (heuristic, local-only) — .
+
+Documentation                          15 / 15
+Repository Hygiene                     15 / 15
+Security                               15 / 15
+Testing                                 5 / 10
+   - no `test` script in package.json
+Developer Experience                    5 / 10
+   - package.json has fewer than 3 scripts (dev/build/lint/test expected)
+Open Source / Contribution Readiness   10 / 10
+AI Transparency                        10 / 10
+Repository Hygiene — Ownership & Process 15 / 15
+
+Engineering Score (heuristic): 90 / 100
+```
+
+The score is honest about this repository too: it has no `package.json` test script, so it
+loses those points. Every deduction names the missing signal, so the output doubles as a
+to-do list.
+
 ## What's checked
 
 `check-repo-blueprint.mjs` — file-presence only, two tiers:
